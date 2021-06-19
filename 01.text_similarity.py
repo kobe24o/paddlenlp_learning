@@ -7,13 +7,14 @@ import paddle
 import paddlenlp
 import paddle.nn.functional as F
 from paddlenlp.datasets import load_dataset
-import paddle.distributed as dist #第1处改动，import库
-def run():
-    dist.init_parallel_env() # 初始化并行环境
+import paddle.distributed as dist #并行
+
+if __name__ == "__main__":
+    dist.init_parallel_env()  # 初始化并行环境
+    # 启动命令 python -m paddle.distributed.launch --gpus '0,1' xxx.py &
     batch_size=64
     epochs = 5
-
-
+    
     # 加载数据集
     train_ds, dev_ds = load_dataset("lcqmc", splits=["train", "dev"])
     # 展示数据
@@ -96,6 +97,7 @@ def run():
     model = TeachingPlanModel(pretrained_model)
     # 并行训练设置
     # https://aistudio.baidu.com/aistudio/projectdetail/1222066
+    # https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/02_paddle2.0_develop/06_device_cn.html
 
     #%%
     # 训练评估
@@ -222,6 +224,3 @@ def run():
             # text_pair = test_ds.data[idx]
             # text_pair["label"] = y_pred
             # print(text_pair)
-
-if __name__ == '__main__':
-    dist.spawn(run, nprocs=2)
