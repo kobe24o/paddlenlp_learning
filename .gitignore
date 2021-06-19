@@ -26,3 +26,11 @@ lcqmc.tsv
 checkpoint/model_11/vocab.txt
 checkpoint/model_11/tokenizer_config.json
 checkpoint/model_11/model_state_pdparams
+competition/NLPCC14-SC/train.tsv
+competition/NLPCC14-SC/test.tsv
+competition/NLPCC14-SC/License.pdf
+competition/ChnSentiCorp/train.tsv
+competition/ChnSentiCorp/test.tsv
+competition/ChnSentiCorp/License.pdf
+competition/ChnSentiCorp/dev.tsv
+competition/__pycache__/my_utils.cpython-38.pyc
