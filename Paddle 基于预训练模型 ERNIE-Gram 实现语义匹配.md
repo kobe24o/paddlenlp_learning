@@ -1,16 +1,16 @@
 目录：
-[1. 导入一些包](导入一些包)
-[2. 加载数据](加载数据)
-[3. 数据预处理](
-  3.1 获取tokenizer，得到 input_ids, token_type_ids
-  3.2 转换函数、batch化函数、sampler、data_loader
-[4. 编写模型](
-[5. 学习率、参数衰减、优化器、loss、评估标准](
-[6. 评估函数](
-[7. 训练+评估](
-[8. 保存模型到文件](
-[9. 预测](
-[10. 多GPU并行设置](
+1. 导入一些包
+2. 加载数据
+3. 数据预处理
+	3.1 获取tokenizer，得到 input_ids, token_type_ids
+	3.2 转换函数、batch化函数、sampler、data_loader
+4. 编写模型
+5. 学习率、参数衰减、优化器、loss、评估标准
+6. 评估函数
+7. 训练+评估
+8. 保存模型到文件
+9. 预测
+10. 多GPU并行设置
 
 项目介绍 项目链接：[https://aistudio.baidu.com/aistudio/projectdetail/2029701](https://aistudio.baidu.com/aistudio/projectdetail/2029701)
 单机多卡训练参考：[https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/02_paddle2.0_develop/06_device_cn.html](https://www.paddlepaddle.org.cn/documentation/docs/zh/guides/02_paddle2.0_develop/06_device_cn.html)
