@@ -11,21 +11,23 @@ import paddle.distributed as dist  # 并行
 
 if __name__ == "__main__":
     dist.init_parallel_env()  # 初始化并行环境
+    dataset_name = "paws-x"
+    # bq_corpus，paws-x数据集代码不变，lcqmc数据集将数据读取的sentence1改为query，sentence2改为title
     # 启动命令 python -m paddle.distributed.launch --gpus '0,1' xxx.py &
-    batch_size = 64
+    batch_size = 32
     epochs = 5
 
     # 加载数据集
-    train_ds, dev_ds = load_dataset("lcqmc", splits=["train", "dev"])
+    train_ds, dev_ds = load_dataset(dataset_name, splits=["train", "dev"])
     # 展示数据
     for i, example in enumerate(train_ds):
         if i < 5:
             print(example)
-        # {'query': '喜欢打篮球的男生喜欢什么样的女生', 'title': '爱打篮球的男生喜欢什么样的女生', 'label': 1}
-        # {'query': '我手机丢了，我想换个手机', 'title': '我想买个新手机，求推荐', 'label': 1}
-        # {'query': '大家觉得她好看吗', 'title': '大家觉得跑男好看吗？', 'label': 0}
-        # {'query': '求秋色之空漫画全集', 'title': '求秋色之空全集漫画', 'label': 1}
-        # {'query': '晚上睡觉带着耳机听音乐有什么害处吗？', 'title': '孕妇可以戴耳机听音乐吗?', 'label': 0}
+        # {'sentence1': '喜欢打篮球的男生喜欢什么样的女生', 'sentence2': '爱打篮球的男生喜欢什么样的女生', 'label': 1}
+        # {'sentence1': '我手机丢了，我想换个手机', 'sentence2': '我想买个新手机，求推荐', 'label': 1}
+        # {'sentence1': '大家觉得她好看吗', 'sentence2': '大家觉得跑男好看吗？', 'label': 0}
+        # {'sentence1': '求秋色之空漫画全集', 'sentence2': '求秋色之空全集漫画', 'label': 1}
+        # {'sentence1': '晚上睡觉带着耳机听音乐有什么害处吗？', 'sentence2': '孕妇可以戴耳机听音乐吗?', 'label': 0}
 
     # %%
     # 数据预处理
@@ -35,7 +37,7 @@ if __name__ == "__main__":
 
 
     def convert_data(data, tokenizer, max_seq_len=512, is_test=False):
-        text1, text2 = data["query"], data["title"]
+        text1, text2 = data["sentence1"], data["sentence2"]
         encoded_inputs = tokenizer(text=text1, text_pair=text2, max_seq_len=max_seq_len)
         input_ids = encoded_inputs["input_ids"]
         token_type_ids = encoded_inputs["token_type_ids"]
@@ -216,7 +218,7 @@ if __name__ == "__main__":
         Pad(axis=0, pad_val=tokenizer.pad_token_type_id)
     ): [data for data in fn(samples)]
 
-    test_ds = load_dataset("lcqmc", splits=["test"])
+    test_ds = load_dataset(dataset_name, splits=["test"])
 
     batch_sampler = paddle.io.BatchSampler(test_ds, batch_size=batch_size, shuffle=False)
     predict_data_loader = paddle.io.DataLoader(
@@ -238,7 +240,7 @@ if __name__ == "__main__":
     y_probs = predict(model, predict_data_loader)
     y_preds = np.argmax(y_probs, axis=1)
     # y_preds = [0 for _ in range(len(predict_data_loader))]
-    with open("lcqmc.tsv", 'w', encoding="utf-8") as f:
+    with open(dataset_name+".tsv", 'w', encoding="utf-8") as f:
         f.write("index\tprediction\n")
         for idx, y_pred in enumerate(y_preds):
             f.write("{}\t{}\n".format(idx, y_pred))
