@@ -1,6 +1,7 @@
 import numpy as np
 import paddle
-
+import paddle.nn.functional as F
+from paddlenlp.data import Stack, Tuple, Pad
 
 def create_dataloader(dataset, trans_func=None, mode="train", batch_size=1, batchify_fn=None):
     # 生成 batch 数据喂入模型
